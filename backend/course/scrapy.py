@@ -30,7 +30,7 @@ def get_lecture_transcripts(url):
     c = 1
     for t in tags:
         if(t.text=='Download Verified'):
-            lid = "lecture - "+str(c)
+            lid = "l"+str(c)
             lec[lid]=t['href']
             c = c+1
     print(lec)

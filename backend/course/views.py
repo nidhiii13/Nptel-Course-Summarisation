@@ -12,6 +12,7 @@ import wget
 from tika import parser
 from rest_framework.decorators import api_view
 from .scrapy import scrape_link,get_lecture_transcripts
+from .summarise import summarise_text
 # Create your views here.
 
 def add_course(request):
@@ -75,3 +76,8 @@ def download_transcripts(request):
     return Response({"transcript":raw['content']},status=status.HTTP_200_OK)
 
 
+@api_view(['POST'])
+def summariser(request):
+    text = request.data.get('text')
+    summ_text = summarise_text(text)
+    return Response({'summ_text':summ_text},status=status.HTTP_200_OK)

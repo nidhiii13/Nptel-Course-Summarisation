@@ -1,12 +1,13 @@
 import React from 'react'
-import Dropdown from 'react-dropdown';
+import { DropdownMultiple, Dropdown } from 'reactjs-dropdown-component';
 import './DropDown.css'
 import 'react-dropdown/style.css';
+import Select from "react-select";
 const DropDown = (props) => {
       const defaultOption = props.heading;
       return (
         <>
-        <Dropdown className='drop-box' options={props.list} value={defaultOption} placeholder="Select an option" />
+        <Select className='drop-box' options={props.options} placeholder={defaultOption} value={props.value} onChange={props.onChange}/>
         </>
   )
 }

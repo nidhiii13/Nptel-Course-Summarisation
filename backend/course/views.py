@@ -35,7 +35,7 @@ def add_course(request):
         
         
         link = scrape_link(courseId[i])
-        print(link)
+        #print(link)
         Course.objects.create(course_id=course_id,course_name=course_name,dept=deptt,sme=sme,institute=institute,link=link,no_of_weeks=no_of_weeks)
 
 
@@ -48,7 +48,7 @@ def get_transcripts(request):
     course = request.data.get('course')
     course_id = Course.objects.get(course_name=course)
     url = course_id.link
-    print(url)
+    #print(url)
     try:
         list = get_lecture_transcripts(url)
         return Response({'course':course,
@@ -71,7 +71,7 @@ def download_transcripts(request):
     url += d_url[-2]
     response = wget.download(url, path)
     raw = parser.from_file(path)
-    print(raw['content'])
+    #print(raw['content'])
     os.remove(path)
     return Response({"transcript":raw['content']},status=status.HTTP_200_OK)
 

@@ -26,12 +26,12 @@ def get_lecture_transcripts(url):
     soup = bs(data, 'lxml')
 
     tags = soup.find_all('a')
-    print(tags)
+    #print(tags)
     c = 1
     for t in tags:
         if(t.text=='Download Verified'):
             lid = "l"+str(c)
             lec[lid]=t['href']
             c = c+1
-    print(lec)
+    #print(lec)
     return (lec)

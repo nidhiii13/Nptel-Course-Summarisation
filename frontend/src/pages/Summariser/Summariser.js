@@ -100,9 +100,10 @@ const Summariser = () => {
         setYt(lk.yt);
         console.log(yt);
            var trim_text = text.trim();
-           console.log(trim_text);
+           console.log(trim_text.slice(120,l));
            var l = trim_text.length;
-          const summ_text = await summariseText(trim_text.slice(250,l));
+           console.log(l);
+          const summ_text = await summariseText(trim_text.slice(100,l));
           setsumm(summ_text.summ_text[0].summary_text);
           console.log(summ_text.summ_text[0].summary_text);
           sum = summ_text.summary_text;
@@ -129,7 +130,7 @@ const Summariser = () => {
       <DropDown heading="lec no" options={list3} value={lec} onChange={handleLec}/></div>
       {flag && <button className='go' onClick={handleSubmit}>GO</button>}
       </div>
-      {yflag && <div className="yt"><a target="_blank"href={yt}>{yt}</a></div>}
+      {yflag && <div className="yt">Link to Video : <a target="_blank"href={yt}>{yt}</a></div>}
       <div className="text_box">
           {summFlag && summ}
       </div>

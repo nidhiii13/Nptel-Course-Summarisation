@@ -9,7 +9,7 @@ def scrape_link(courseId):
     response = requests.get(url)
     data = response.text
     soup = bs(data, 'lxml')
-    #print(soup.prettify())
+    print(soup.prettify())
 
     for link in soup.find_all('a', 
                           attrs={'href': re.compile("^http://")}):
@@ -35,3 +35,13 @@ def get_lecture_transcripts(url):
             c = c+1
     #print(lec)
     return (lec)
+
+def scrape_youtube(link,ln):
+    response = requests.get(link)
+    data = response.text
+    soup = bs(data, 'lxml')
+    l=soup.find('li',id="lec"+ln).find('a')
+    yt = l["onclick"].split(',')[1]
+    yt= yt.split("'")
+    yt_link = "https://www.youtube.com/embed/"+yt[1]
+    return yt_link

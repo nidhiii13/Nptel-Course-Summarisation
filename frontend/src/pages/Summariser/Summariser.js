@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import DropDown from '../../Components/DropDown/DropDown';
 import "./Summariser.css";
 import axios from 'axios';
-import { getCourses, getCourseTranscripts,downloadCourseTranscripts, summariseText } from '../../api/api';
+import { getCourses, getCourseTranscripts,downloadCourseTranscripts, summariseText, generateQues, generate_yt } from '../../api/api';
 import Select from "react-dropdown-select";
 
 const Summariser = () => {
@@ -23,6 +23,8 @@ const Summariser = () => {
     const [course,setCourse] = useState("");
     const [lec,setLec] = useState("");
     const [flag,setFlag] = useState(false);
+    const [yt,setYt] = useState("");
+    const [yflag,setYflag] = useState(false);
     const [summFlag,setsummFlag] = useState(false);
     var sum ="";
     const [summ,setsumm] = useState("");
@@ -64,6 +66,7 @@ const Summariser = () => {
     const handleDept = (dept)=>{
       setsumm("Summarised text here");
       setFlag(false);
+      setYflag(false);
      setDept(dept);
      getCourseList(dept.label);
      console.log(dept);
@@ -71,27 +74,48 @@ const Summariser = () => {
 
     const handleCourse = (course)=>{
         setFlag(false);
+        setYflag(false);
+        setsumm("Summarised text here");
         setCourse(course);
         getTranscriptsList(course.label);
        };
 
        const handleLec = (lec)=>{
         setFlag(false);
+        setYflag(false);
+        setsumm("Summarised text here");
         setLec(lec);
         console.log(lec.value);
         downloadTranscripts(lec.label.toString(),lec.value.toString());
+        
        };
 
        const handleSubmit = async()=>{
            //console.log(text);
+           console.log(course.label);
+           console.log(lec.label.toString());
+           const lk = await generate_yt(course.label,lec.label.toString());
+           console.log(lk);
+           setYflag(true);
+        setYt(lk.yt);
+        console.log(yt);
            var trim_text = text.trim();
-          const summ_text = await summariseText(trim_text.slice(250,4500));
+           console.log(trim_text);
+           var l = trim_text.length;
+          const summ_text = await summariseText(trim_text.slice(250,l));
           setsumm(summ_text.summ_text[0].summary_text);
           console.log(summ_text.summ_text[0].summary_text);
           sum = summ_text.summary_text;
           setsummFlag(true);
           console.log(summ_text);
           console.log(summ);
+       };
+
+       const generateQuestion = async()=>{
+        const ques = await generateQues(summ);
+        var q_list = ques.ques;
+        setsumm(q_list.toString());
+        console.log(q_list.toString());
        };
   return (
       <>
@@ -105,10 +129,11 @@ const Summariser = () => {
       <DropDown heading="lec no" options={list3} value={lec} onChange={handleLec}/></div>
       {flag && <button className='go' onClick={handleSubmit}>GO</button>}
       </div>
+      {yflag && <div className="yt"><a target="_blank"href={yt}>{yt}</a></div>}
       <div className="text_box">
           {summFlag && summ}
       </div>
-      <button className='download_button' onClick={getCourseList}>Download PDF</button>
+      <button className='qs_button' onClick={generateQuestion}>Generate Qs</button>
       </div>
     </>
   )

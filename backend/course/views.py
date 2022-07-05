@@ -11,8 +11,9 @@ from course.models import Course
 import wget
 from tika import parser
 from rest_framework.decorators import api_view
-from .scrapy import scrape_link,get_lecture_transcripts
+from .scrapy import scrape_link,get_lecture_transcripts, scrape_youtube
 from .summarise import summarise_text
+from .quesg import ques_generator
 # Create your views here.
 
 def add_course(request):
@@ -48,7 +49,7 @@ def get_transcripts(request):
     course = request.data.get('course')
     course_id = Course.objects.get(course_name=course)
     url = course_id.link
-    #print(url)
+    print(url)
     try:
         list = get_lecture_transcripts(url)
         return Response({'course':course,
@@ -81,3 +82,18 @@ def summariser(request):
     text = request.data.get('text')
     summ_text = summarise_text(text)
     return Response({'summ_text':summ_text},status=status.HTTP_200_OK)
+
+@api_view(['POST'])
+def ques_gen(request):
+    text = request.data.get('text')
+    ques = ques_generator(text)
+    return Response({'ques':ques},status=status.HTTP_200_OK)
+
+@api_view(['POST'])
+def get_yt(request):
+    course = request.data.get('course')
+    course_id = Course.objects.get(course_name=course)
+    url = course_id.link
+    lec = request.data.get('lec')
+    link = scrape_youtube(url,lec)
+    return Response({'yt':link},status=status.HTTP_200_OK)
